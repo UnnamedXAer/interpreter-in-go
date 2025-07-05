@@ -1,3 +1,3 @@
 module github.com/unnamedxaer/interpreter-in-go
 
-go 1.23.2
+go 1.24.4
