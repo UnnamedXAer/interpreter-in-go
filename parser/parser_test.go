@@ -322,7 +322,7 @@ func testIdentifier(t *testing.T, exp ast.Expression, value string) bool {
 	}
 
 	if ident.Value != value {
-		t.Errorf("ide.tValue not %s. got %s", value, ident.Value)
+		t.Errorf("ide.Value not %s. got %s", value, ident.Value)
 		return false
 	}
 
@@ -333,6 +333,67 @@ func testIdentifier(t *testing.T, exp ast.Expression, value string) bool {
 
 	return true
 }
+
+func TestBooleanExpression(t *testing.T) {
+
+	tests := []struct {
+		input    string
+		expected bool
+	}{
+		{"true;", true},
+		{"false;", false},
+	}
+
+	for _, tt := range tests {
+		l := lexer.New(tt.input)
+		p := New(l)
+		program := p.ParseProgram()
+		checkParseErrors(t, p)
+
+		if len(program.Statements) != 1 {
+			t.Fatalf("program has wrong number of statements. got=%d", len(program.Statements))
+		}
+
+		stmt, ok := program.Statements[0].(*ast.ExpressionStatement)
+		if !ok {
+			t.Fatalf("program.Statements[0] is not *ast.ExpressionStatement. got=%T", program.Statements[0])
+		}
+
+		b, ok := stmt.Expression.(*ast.Boolean)
+		if !ok {
+			t.Fatalf("exp not *ast.Boolean. got=%T", stmt.Expression)
+		}
+
+		if b.Value != tt.expected {
+			t.Fatalf("b.Value not %t. got=%t", tt.expected, b.Value)
+		}
+
+		if b.TokenLiteral() != fmt.Sprintf("%t", tt.expected) {
+			t.Fatalf("b.TokenLiteral not %t. got=%s", tt.expected, b.TokenLiteral())
+		}
+
+	}
+}
+
+// func testBoolean(t *testing.T, exp ast.Expression, value bool) bool {
+// 	b, ok := exp.(*ast.Boolean)
+// 	if !ok {
+// 		t.Errorf("exp not *ast.Boolean. got=%T", exp)
+// 		return false
+// 	}
+//
+// 	if b.Value != value {
+// 		t.Errorf("b.Value not %t. got=%t", value, b.Value)
+// 		return false
+// 	}
+//
+// 	if b.TokenLiteral() != fmt.Sprintf("%t", value) {
+// 		t.Errorf("b.TokenLiteral not %t. got=%s", value, b.TokenLiteral())
+// 		return false
+// 	}
+//
+// 	return true
+// }
 
 func testLiteralExpression(
 	t *testing.T,
@@ -346,6 +407,8 @@ func testLiteralExpression(
 		return testIntegerLiteral(t, exp, v)
 	case string:
 		return testIdentifier(t, exp, v)
+		// case bool:
+		// 	return testBoolean(t, exp, v)
 	}
 
 	t.Errorf("type of exp not handled. got=%T", exp)
