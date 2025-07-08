@@ -20,3 +20,5 @@ func main() {
 	fmt.Printf("Fell free to type commands\n")
 	repl.Start(os.Stdin, os.Stdout)
 }
+
+// let func = fn(a,b,c) { if (1== a) {return b;} else {c + 2*7;}};
