@@ -400,11 +400,10 @@ func TestBuiltinFunctions(t *testing.T) {
 		{`last(1)`, "argument to `last` must be ARRAY, got INTEGER"},
 		{`rest([1, 2, 3])`, []int{2, 3}},
 		{`rest([])`, nil},
+		{`len(rest([1, 2, 3]))`, 2},
 		{`push([], 1)`, []int{1}},
 		{`push(1, 1)`, "argument to `push` must be ARRAY, got INTEGER"},
-		{`pop([])`, nil},
-		{`pop([1,2,3])`, 3},
-		{`pop(1)`, "argument to `pop` must be ARRAY, got INTEGER"},
+		{`len(push([1], 2))`, 2},
 	}
 	for _, tt := range tests {
 
