@@ -1,7 +1,9 @@
 package evaluator
 
 import (
+	"bytes"
 	"fmt"
+	"os"
 
 	"github.com/unnamedxaer/interpreter-in-go/ast"
 	"github.com/unnamedxaer/interpreter-in-go/object"
@@ -116,6 +118,30 @@ var builtins = map[string]*object.Builtin{
 			copy(updatedElements[length:], incomingElements)
 			return &object.Array{Elements: updatedElements}
 
+		},
+	},
+
+	"puts": {
+		Fn: func(args ...object.Object) object.Object {
+
+			var out bytes.Buffer
+
+			if len(args) == 0 {
+				return NULL
+			}
+
+			out.WriteString(args[0].Inspect())
+
+			if len(args) > 1 {
+				for i := 1; i < len(args); i++ {
+					out.WriteString(" ")
+					out.WriteString(args[i].Inspect())
+				}
+			}
+
+			fmt.Fprintln(os.Stdout, out.String())
+
+			return NULL
 		},
 	},
 }
