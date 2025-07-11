@@ -2,6 +2,7 @@ package ast
 
 import (
 	"bytes"
+	"fmt"
 	"strings"
 
 	"github.com/unnamedxaer/interpreter-in-go/token"
@@ -326,6 +327,29 @@ func (ie *IndexExpression) String() string {
 	out.WriteString("[")
 	out.WriteString(ie.Index.String())
 	out.WriteString("])")
+
+	return out.String()
+}
+
+type HashLiteral struct {
+	Token token.Token // the '{' token
+	Pairs map[Expression]Expression
+}
+
+func (hl *HashLiteral) expressionNode()      {}
+func (hl *HashLiteral) TokenLiteral() string { return hl.Token.Literal }
+
+func (hl *HashLiteral) String() string {
+	var out bytes.Buffer
+
+	elements := []string{}
+	for k, v := range hl.Pairs {
+		elements = append(elements, fmt.Sprintf("%s:%s", k.String(), v.String()))
+	}
+
+	out.WriteString("{")
+	out.WriteString(strings.Join(elements, ", "))
+	out.WriteString("}")
 
 	return out.String()
 }
