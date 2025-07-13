@@ -69,8 +69,8 @@ func parse(input string) ast.Node {
 func testInstructions(expected []code.Instructions, actual code.Instructions) error {
 	concatted := concatInstructions(expected)
 
-	if len(actual) != len(expected) {
-		return fmt.Errorf("wrong instructions length.\nwant=%q\ngot =%q", expected, actual)
+	if len(actual) != len(concatted) {
+		return fmt.Errorf("wrong instructions length.\nwant=%q\ngot =%q", concatted, actual)
 	}
 
 	for i, ins := range concatted {
