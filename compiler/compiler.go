@@ -70,7 +70,9 @@ func (c *Compiler) Compile(node ast.Node) error {
 			return err
 		}
 
-		// Emit an `OnJumpNotTruthy` with bogus value
+		// Emit an `OnJumpNotTruthy` with bogus value;
+		// The jump is emitted and later updated with correct value, but the jump is executed
+		// (in vm) only if the condition evaluates to false
 		jumpNotTruthyPos := c.emit(code.OpJumpNotTruthy, 9999)
 
 		err = c.Compile(node.Consequence)
@@ -82,16 +84,15 @@ func (c *Compiler) Compile(node ast.Node) error {
 			c.removeLastPop()
 		}
 
+		// Emit an `OpJump` with a bogus value
+		jumpPos := c.emit(code.OpJump, 9999)
+
+		afterConsequencePos := len(c.instructions)
+		c.changeOperand(jumpNotTruthyPos, afterConsequencePos)
+
 		if node.Alternative == nil {
-			afterConsequencePos := len(c.instructions)
-			c.changeOperand(jumpNotTruthyPos, afterConsequencePos)
+			c.emit(code.OpNull)
 		} else {
-			// Emit an `OpJump` with a bogus value
-			jumpPos := c.emit(code.OpJump, 9999)
-
-			afterConsequencePos := len(c.instructions)
-			c.changeOperand(jumpNotTruthyPos, afterConsequencePos)
-
 			err := c.Compile(node.Alternative)
 			if err != nil {
 				return err
@@ -100,10 +101,10 @@ func (c *Compiler) Compile(node ast.Node) error {
 			if c.lastInstructionIsPop() {
 				c.removeLastPop()
 			}
-
-			alfterAlternativePos := len(c.instructions)
-			c.changeOperand(jumpPos, alfterAlternativePos)
 		}
+
+		alfterAlternativePos := len(c.instructions)
+		c.changeOperand(jumpPos, alfterAlternativePos)
 
 	case *ast.InfixExpression:
 		if node.Operator == "<" {

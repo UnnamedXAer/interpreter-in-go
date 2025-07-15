@@ -64,8 +64,9 @@ const (
 	OpGreaterThan                 // a>b
 	OpMinus                       // -a
 	OpBang                        // !true
-	OpJumpNotTruthy               // conditional jump if truthy: `if (!false || !NULL)...`, accepts offset
+	OpJumpNotTruthy               // this instruction will tell the VM to only jump if the value on top of the stack is not 'truthy' (i.e. not `false` nor `null`), accepts offset
 	OpJump                        // accepts offset
+	OpNull                        // 'null'
 )
 
 type Definition struct {
@@ -89,6 +90,7 @@ var definitions = map[Opcode]*Definition{
 	OpBang:          {"OpBang", []int{}},
 	OpJump:          {"OpJump", []int{2}},
 	OpJumpNotTruthy: {"OpJumpNotTruthy", []int{2}},
+	OpNull:          {"OpNull", []int{}},
 }
 
 func Lookup(op byte) (*Definition, error) {
