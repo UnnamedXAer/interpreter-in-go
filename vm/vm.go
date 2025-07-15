@@ -49,7 +49,7 @@ func (vm *VM) Run() error {
 		switch op {
 		case code.OpConstant:
 			constIndex := code.ReadUint16(vm.instructions[ip+1:])
-			ip += 2
+			ip += 2 // skip over operand to the next instruction's operator
 
 			err := vm.push(vm.constants[constIndex])
 			if err != nil {
@@ -77,6 +77,23 @@ func (vm *VM) Run() error {
 		case code.OpPop:
 			vm.pop()
 
+		case code.OpJump:
+			pos := int(code.ReadUint16(vm.instructions[ip+1:])) // position where to jump;
+
+			ip = pos - 1 // sets instruction pointer to posion where we want to jump minus one because we are in a loop and the ip will get incremented.
+
+		case code.OpJumpNotTruthy:
+			pos := int(code.ReadUint16(vm.instructions[ip+1:]))
+
+			ip += 2 // skip operand
+
+			condition := vm.pop()
+			if !isTrutry(condition) { // if condition is not truthy we jump after the consequence;
+				ip = pos - 1 // jump to a postion
+			}
+
+			// otherwise if condition is truthy we naturally step into the consequece block;
+
 		case code.OpTrue:
 			err := vm.push(True)
 			if err != nil {
@@ -99,6 +116,15 @@ func (vm *VM) Run() error {
 	}
 
 	return nil
+}
+
+func isTrutry(obj object.Object) bool {
+	switch obj := obj.(type) {
+	case (*object.Boolean):
+		return obj.Value
+	default:
+		return true
+	}
 }
 
 func (vm *VM) executeMinusOperator() error {
