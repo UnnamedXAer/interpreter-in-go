@@ -67,6 +67,8 @@ const (
 	OpJumpNotTruthy               // this instruction will tell the VM to only jump if the value on top of the stack is not 'truthy' (i.e. not `false` nor `null`), accepts offset
 	OpJump                        // accepts offset
 	OpNull                        // 'null'
+	OpGetGlobal                   // retrives value of a global variable
+	OpSetGlobal                   // sets value of a global variable
 )
 
 type Definition struct {
@@ -91,6 +93,8 @@ var definitions = map[Opcode]*Definition{
 	OpJump:          {"OpJump", []int{2}},
 	OpJumpNotTruthy: {"OpJumpNotTruthy", []int{2}},
 	OpNull:          {"OpNull", []int{}},
+	OpGetGlobal:     {"OpGetGlobal", []int{2}},
+	OpSetGlobal:     {"OpSetGlobal", []int{2}},
 }
 
 func Lookup(op byte) (*Definition, error) {
