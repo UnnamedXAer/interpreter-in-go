@@ -7,19 +7,21 @@ import (
 	"strings"
 
 	"github.com/unnamedxaer/interpreter-in-go/ast"
+	"github.com/unnamedxaer/interpreter-in-go/code"
 )
 
 const (
-	INTEGER_OBJ      = "INTEGER"
-	STRING_OBJ       = "STRING"
-	BOOLEAN_OBJ      = "BOOLEAN"
-	NULL_OBJ         = "NULL"
-	ARRAY_OBJ        = "ARRAY"
-	HASH_OBJ         = "HASH"
-	RETURN_VALUE_OBJ = "RETURN_VALUE"
-	ERROR_OBJ        = "ERROR"
-	FUNCTION_OBJ     = "FUNCTION"
-	BUILTIN_OBJ      = "BUILTIN"
+	INTEGER_OBJ           = "INTEGER"
+	STRING_OBJ            = "STRING"
+	BOOLEAN_OBJ           = "BOOLEAN"
+	NULL_OBJ              = "NULL"
+	ARRAY_OBJ             = "ARRAY"
+	HASH_OBJ              = "HASH"
+	RETURN_VALUE_OBJ      = "RETURN_VALUE"
+	ERROR_OBJ             = "ERROR"
+	FUNCTION_OBJ          = "FUNCTION"
+	BUILTIN_OBJ           = "BUILTIN"
+	COMPILED_FUNCTION_OBJ = "COMPILED_FUNCTION_OBJ"
 )
 
 type ObjectType string
@@ -175,4 +177,13 @@ func (h *Hash) Inspect() string {
 	out.WriteString("}")
 
 	return out.String()
+}
+
+type CompiledFunction struct {
+	Instructions code.Instructions
+}
+
+func (cf *CompiledFunction) Type() ObjectType { return COMPILED_FUNCTION_OBJ }
+func (cf *CompiledFunction) Inspect() string {
+	return fmt.Sprintf("CompiledFunction[%p]", cf)
 }

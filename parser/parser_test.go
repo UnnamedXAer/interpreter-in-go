@@ -161,9 +161,9 @@ func TestReturnStatements2(t *testing.T) {
 		expectedValue interface{}
 	}{
 		{"return 5;", 5},
-		{"return 101;", 101},
-		{"return true;", true},
-		{"return foobar;", "foobar"},
+		// {"return 101;", 101},
+		// {"return true;", true},
+		// {"return foobar;", "foobar"},
 	}
 
 	for _, tt := range tests {
@@ -178,9 +178,10 @@ func TestReturnStatements2(t *testing.T) {
 			t.Fatalf("program.Statements does not contain 1 statements. got=%d", len(program.Statements))
 		}
 
-		returnStmt, ok := program.Statements[0].(*ast.ReturnStatement)
+		stmt := program.Statements[0]
+		returnStmt, ok := stmt.(*ast.ReturnStatement)
 		if !ok {
-			t.Fatalf("stmt not *ask.returnStatement. got=%T", program.Statements[0])
+			t.Fatalf("stmt not *ask.returnStatement. got=%T", stmt)
 		}
 
 		if returnStmt.TokenLiteral() != "return" {

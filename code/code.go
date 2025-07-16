@@ -72,6 +72,9 @@ const (
 	OpArray                       // accepts size of the array
 	OpHash                        // accept number of keys + number of values
 	OpIndex                       // [1,2][0], {a:b}[a]
+	OpCall                        // calls functin myFunc()
+	OpReturnValue                 //
+	OpReturn                      // just return (go back), no value
 )
 
 type Definition struct {
@@ -101,6 +104,9 @@ var definitions = map[Opcode]*Definition{
 	OpArray:         {"OpArray", []int{2}},
 	OpHash:          {"OpHash", []int{2}},
 	OpIndex:         {"OpIndex", []int{}},
+	OpCall:          {"OpIndex", []int{}},
+	OpReturnValue:   {"OpReturnValue", []int{}},
+	OpReturn:        {"OpReturn", []int{}},
 }
 
 func Lookup(op byte) (*Definition, error) {
