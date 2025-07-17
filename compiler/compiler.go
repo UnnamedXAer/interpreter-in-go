@@ -150,8 +150,8 @@ func (c *Compiler) Compile(node ast.Node) error {
 			}
 		}
 
-		alfterAlternativePos := len(c.currentInstructions())
-		c.changeOperand(jumpPos, alfterAlternativePos)
+		afterAlternativePos := len(c.currentInstructions())
+		c.changeOperand(jumpPos, afterAlternativePos)
 
 	case *ast.InfixExpression:
 		if node.Operator == "<" {
@@ -350,9 +350,9 @@ func (c *Compiler) replaceInstruction(pos int, newInstruction []byte) {
 
 func (c *Compiler) changeOperand(opPos int, operand int) {
 
-	// changing the operang itself can get messy with multi-byte operands, so the changeOperand method recreates the instructions with the new operand and uses c.replaceInstruction to swap the old instruction forthe new one - including the operand.
+	// changing the operand itself can get messy with multi-byte operands, so the changeOperand method recreates the instructions with the new operand and uses c.replaceInstruction to swap the old instruction for the new one - including the operand.
 
-	// the underlying assumption here is that we only replace instructions of the same type, with the same non-variable lenght. If that assumption no longer holds, we'd have to tread far more carefully here and update c.lastInstruction and c.previousInstruction accordingly.
+	// the underlying assumption here is that we only replace instructions of the same type, with the same non-variable length. If that assumption no longer holds, we'd have to tread far more carefully here and update c.lastInstruction and c.previousInstruction accordingly.
 
 	op := code.Opcode(c.currentInstructions()[opPos])
 	newInstruction := code.Make(op, operand)

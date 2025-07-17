@@ -2,7 +2,7 @@ package object
 
 import "testing"
 
-func TestStringHasheKey(t *testing.T) {
+func TestStringHashKey(t *testing.T) {
 	hello1 := &String{Value: "Hello World"}
 	hello2 := &String{Value: "Hello World"}
 	diff1 := &String{Value: "My name is Johnny"}
@@ -21,7 +21,7 @@ func TestStringHasheKey(t *testing.T) {
 	}
 }
 
-func TestBooleanHasheKey(t *testing.T) {
+func TestBooleanHashKey(t *testing.T) {
 	hello1 := &Boolean{Value: true}
 	hello2 := &Boolean{Value: true}
 	diff1 := &Boolean{Value: false}
@@ -40,7 +40,7 @@ func TestBooleanHasheKey(t *testing.T) {
 	}
 }
 
-func TestIntegerHasheKey(t *testing.T) {
+func TestIntegerHashKey(t *testing.T) {
 	hello1 := &Integer{Value: 1}
 	hello2 := &Integer{Value: 1}
 	diff1 := &Integer{Value: 2}

@@ -48,9 +48,9 @@ func TestLetStatements(t *testing.T) {
 
 func TestLetStatements2(t *testing.T) {
 	tests := []struct {
-		input               string
-		exprectedIdentifier string
-		expectedValue       interface{}
+		input              string
+		expectedIdentifier string
+		expectedValue      interface{}
 	}{
 		{"let x = 5;", "x", 5},
 		{"let y = true;", "y", true},
@@ -71,7 +71,7 @@ func TestLetStatements2(t *testing.T) {
 		}
 
 		stmt := program.Statements[0]
-		if !testLetStatement(t, stmt, tt.exprectedIdentifier) {
+		if !testLetStatement(t, stmt, tt.expectedIdentifier) {
 			return
 		}
 
@@ -211,7 +211,7 @@ func TestIdentifierExpression(t *testing.T) {
 	stmt, ok := program.Statements[0].(*ast.ExpressionStatement)
 
 	if !ok {
-		t.Fatalf("program.Statements[0] is not *ast.ExpressonStatament. got=%T", program.Statements[0])
+		t.Fatalf("program.Statements[0] is not *ast.ExpressionStatement. got=%T", program.Statements[0])
 	}
 
 	ident, ok := stmt.Expression.(*ast.Identifier)
@@ -557,7 +557,7 @@ func TestIfExpression(t *testing.T) {
 	checkParseErrors(t, p)
 
 	if len(program.Statements) != 1 {
-		t.Fatalf("problem.Body does not contai %d statements. got=%d\n", 1, len(program.Statements))
+		t.Fatalf("problem.Body does not contain %d statements. got=%d\n", 1, len(program.Statements))
 	}
 
 	stmt, ok := program.Statements[0].(*ast.ExpressionStatement)
@@ -601,7 +601,7 @@ func TestIfElseExpression(t *testing.T) {
 	checkParseErrors(t, p)
 
 	if len(program.Statements) != 1 {
-		t.Fatalf("problem.Body does not contai %d statements. got=%d\n", 1, len(program.Statements))
+		t.Fatalf("problem.Body does not contain %d statements. got=%d\n", 1, len(program.Statements))
 	}
 
 	stmt, ok := program.Statements[0].(*ast.ExpressionStatement)
@@ -645,7 +645,7 @@ func TestIfElseExpression(t *testing.T) {
 	}
 }
 
-func TestFunctionLiteralParsong(t *testing.T) {
+func TestFunctionLiteralParson(t *testing.T) {
 	input := `fn(x, y) { x + y }`
 
 	l := lexer.New(input)
@@ -659,7 +659,7 @@ func TestFunctionLiteralParsong(t *testing.T) {
 
 	stmt, ok := program.Statements[0].(*ast.ExpressionStatement)
 	if !ok {
-		t.Fatalf("program.Statements[0] is not *ast.ExpressionStatemnt. got=%T", program.Statements[0])
+		t.Fatalf("program.Statements[0] is not *ast.ExpressionStatement. got=%T", program.Statements[0])
 	}
 
 	function, ok := stmt.Expression.(*ast.FunctionLiteral)
@@ -675,7 +675,7 @@ func TestFunctionLiteralParsong(t *testing.T) {
 	testLiteralExpression(t, function.Parameters[1], "y")
 
 	if len(function.Body.Statements) != 1 {
-		t.Fatalf("function.Body.Statemtnts has not 1 statements. got=%d\n", len(function.Body.Statements))
+		t.Fatalf("function.Body.Statements has not 1 statements. got=%d\n", len(function.Body.Statements))
 	}
 
 	bodyStmt, ok := function.Body.Statements[0].(*ast.ExpressionStatement)
@@ -725,12 +725,12 @@ func TestCallExpressionParsing(t *testing.T) {
 	checkParseErrors(t, p)
 
 	if len(program.Statements) != 1 {
-		t.Fatalf("program.Statements does not contain %d statemtns. got=%d\n", 1, len(program.Statements))
+		t.Fatalf("program.Statements does not contain %d statements. got=%d\n", 1, len(program.Statements))
 	}
 
 	stmt, ok := program.Statements[0].(*ast.ExpressionStatement)
 	if !ok {
-		t.Fatalf("stmt is not ast.ExpressionStatemtnt. got=%T", program.Statements[0])
+		t.Fatalf("stmt is not ast.ExpressionStatement. got=%T", program.Statements[0])
 	}
 
 	exp, ok := stmt.Expression.(*ast.CallExpression)
@@ -754,7 +754,7 @@ func TestCallExpressionParsing(t *testing.T) {
 func TestCallExpressionParameterParsing(t *testing.T) {
 	tests := []struct {
 		input         string
-		expectesIdent string
+		expectedIdent string
 		expectedArgs  []string
 	}{
 		{"add();", "add", []string{}},
@@ -775,7 +775,7 @@ func TestCallExpressionParameterParsing(t *testing.T) {
 			t.Fatalf("stmt.Expression is not *ast.CallExpression. got=%T", stmt.Expression)
 		}
 
-		if !testIdentifier(t, exp.Function, tt.expectesIdent) {
+		if !testIdentifier(t, exp.Function, tt.expectedIdent) {
 			return
 		}
 
@@ -822,7 +822,7 @@ func TestParsingArrayLiterals(t *testing.T) {
 	stmt := program.Statements[0].(*ast.ExpressionStatement)
 	array, ok := stmt.Expression.(*ast.ArrayLiteral)
 	if !ok {
-		t.Fatalf("stmt.Expession is not *ast.ArrayLiteral. got=%T", stmt.Expression)
+		t.Fatalf("stmt.Expression is not *ast.ArrayLiteral. got=%T", stmt.Expression)
 	}
 
 	if len(array.Elements) != 3 {
@@ -869,7 +869,7 @@ func TestParsingEmptyHashLiterals(t *testing.T) {
 	stmt := program.Statements[0].(*ast.ExpressionStatement)
 	hash, ok := stmt.Expression.(*ast.HashLiteral)
 	if !ok {
-		t.Fatalf("stmt.Expession is not *ast.HashLiteral. got=%T", stmt.Expression)
+		t.Fatalf("stmt.Expression is not *ast.HashLiteral. got=%T", stmt.Expression)
 	}
 
 	if len(hash.Pairs) != 0 {
@@ -888,7 +888,7 @@ func TestParsingHashLiteralsStringKeys(t *testing.T) {
 	stmt := program.Statements[0].(*ast.ExpressionStatement)
 	hash, ok := stmt.Expression.(*ast.HashLiteral)
 	if !ok {
-		t.Fatalf("stmt.Expession is not *ast.HashLiteral. got=%T", stmt.Expression)
+		t.Fatalf("stmt.Expression is not *ast.HashLiteral. got=%T", stmt.Expression)
 	}
 
 	if len(hash.Pairs) != 3 {
@@ -928,7 +928,7 @@ func TestParsingHashLiteralsBooleanKeys(t *testing.T) {
 	stmt := program.Statements[0].(*ast.ExpressionStatement)
 	hash, ok := stmt.Expression.(*ast.HashLiteral)
 	if !ok {
-		t.Fatalf("stmt.Expession is not *ast.HashLiteral. got=%T", stmt.Expression)
+		t.Fatalf("stmt.Expression is not *ast.HashLiteral. got=%T", stmt.Expression)
 	}
 
 	if len(hash.Pairs) != 2 {
@@ -967,7 +967,7 @@ func TestParsingHashLiteralsIntegerLiteralKeys(t *testing.T) {
 	stmt := program.Statements[0].(*ast.ExpressionStatement)
 	hash, ok := stmt.Expression.(*ast.HashLiteral)
 	if !ok {
-		t.Fatalf("stmt.Expession is not *ast.HashLiteral. got=%T", stmt.Expression)
+		t.Fatalf("stmt.Expression is not *ast.HashLiteral. got=%T", stmt.Expression)
 	}
 
 	if len(hash.Pairs) != 3 {
@@ -1007,7 +1007,7 @@ func TestParsingHashLiteralsWithExpressions(t *testing.T) {
 	stmt := program.Statements[0].(*ast.ExpressionStatement)
 	hash, ok := stmt.Expression.(*ast.HashLiteral)
 	if !ok {
-		t.Fatalf("stmt.Expession is not *ast.HashLiteral. got=%T", stmt.Expression)
+		t.Fatalf("stmt.Expression is not *ast.HashLiteral. got=%T", stmt.Expression)
 	}
 
 	if len(hash.Pairs) != 3 {

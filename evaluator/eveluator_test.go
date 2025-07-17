@@ -272,7 +272,7 @@ func TestErrorHandling(t *testing.T) {
 		}
 
 		if errObj.Message != tt.expectedMessage {
-			t.Errorf("erong error messge. want=%q, got=%q", tt.expectedMessage, errObj.Message)
+			t.Errorf("wrong error message. want=%q, got=%q", tt.expectedMessage, errObj.Message)
 		}
 
 	}
@@ -281,8 +281,8 @@ func TestErrorHandling(t *testing.T) {
 
 func TestLetStatements(t *testing.T) {
 	tests := []struct {
-		input     string
-		exprected int64
+		input    string
+		expected int64
 	}{
 		{"let a = 5; a;", 5},
 		{"let a = 5 * 5; a;", 25},
@@ -293,7 +293,7 @@ func TestLetStatements(t *testing.T) {
 	for _, tt := range tests {
 		evaluated := testEval(tt.input)
 
-		testIntegerObject(t, evaluated, tt.exprected)
+		testIntegerObject(t, evaluated, tt.expected)
 	}
 
 }

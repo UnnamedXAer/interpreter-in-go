@@ -67,12 +67,12 @@ const (
 	OpJumpNotTruthy               // this instruction will tell the VM to only jump if the value on top of the stack is not 'truthy' (i.e. not `false` nor `null`), accepts offset
 	OpJump                        // accepts offset
 	OpNull                        // 'null'
-	OpGetGlobal                   // retrives value of a global variable
+	OpGetGlobal                   // retrieves value of a global variable
 	OpSetGlobal                   // sets value of a global variable
 	OpArray                       // accepts size of the array
 	OpHash                        // accept number of keys + number of values
 	OpIndex                       // [1,2][0], {a:b}[a]
-	OpCall                        // calls functin myFunc()
+	OpCall                        // calls function myFunc()
 	OpReturnValue                 //
 	OpReturn                      // just return (go back), no value
 )
