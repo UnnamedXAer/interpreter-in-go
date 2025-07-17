@@ -6,12 +6,17 @@ import (
 )
 
 type Frame struct {
-	fn *object.CompiledFunction
-	ip int //instruction pointer in THIS frame for this function;
+	fn          *object.CompiledFunction
+	ip          int // instruction pointer in THIS frame for this function;
+	basePointer int // the stack pointer's value before we execute a function. It pointes to the bottom of the stack of the current call frame;
 }
 
-func NewFrame(fn *object.CompiledFunction) *Frame {
-	return &Frame{fn: fn, ip: -1}
+func NewFrame(fn *object.CompiledFunction, basePointer int) *Frame {
+	return &Frame{
+		fn:          fn,
+		ip:          -1,
+		basePointer: basePointer,
+	}
 }
 
 func (f *Frame) Instructions() code.Instructions {
