@@ -190,7 +190,8 @@ func (p *Parser) parseLetStatement() *ast.LetStatement {
 
 	stmt.Value = p.parseExpression(LOWEST)
 
-	for !p.curTokenIs(token.SEMICOLON) && !p.curTokenIs(token.EOF) {
+	// for !p.curTokenIs(token.SEMICOLON) && !p.curTokenIs(token.EOF) {
+	for p.peekTokenIs(token.SEMICOLON) {
 		p.nextToken()
 	}
 
