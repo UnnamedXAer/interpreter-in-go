@@ -77,6 +77,7 @@ const (
 	OpReturn                      // just return (go back), no value
 	OpGetLocal                    // retrieves value of a local variable
 	OpSetLocal                    // sets value of a local variable
+	OpGetBuiltin                  // get built-in function: len, push...
 )
 
 type Definition struct {
@@ -111,6 +112,7 @@ var definitions = map[Opcode]*Definition{
 	OpReturn:        {"OpReturn", []int{}},
 	OpGetLocal:      {"OpGetLocal", []int{1}}, // up to 256 local variables
 	OpSetLocal:      {"OpSetLocal", []int{1}},
+	OpGetBuiltin:    {"OpGetBuiltin", []int{1}}, // index of built-in, up to 256 built-in functions;
 }
 
 func Lookup(op byte) (*Definition, error) {
