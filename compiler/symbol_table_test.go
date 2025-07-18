@@ -161,9 +161,9 @@ func TestDefineResolveBuiltins(t *testing.T) {
 
 	expected := []Symbol{
 		{Name: "a", Scope: BuiltinScope, Index: 0},
-		{Name: "a", Scope: BuiltinScope, Index: 1},
-		{Name: "a", Scope: BuiltinScope, Index: 2},
-		{Name: "a", Scope: BuiltinScope, Index: 3},
+		{Name: "b", Scope: BuiltinScope, Index: 1},
+		{Name: "c", Scope: BuiltinScope, Index: 2},
+		{Name: "d", Scope: BuiltinScope, Index: 3},
 	}
 
 	for i, v := range expected {
