@@ -42,6 +42,8 @@ func (ins Instructions) fmtInstruction(def *Definition, operands []int) any {
 		return def.Name
 	case 1:
 		return fmt.Sprintf("%s %d", def.Name, operands[0])
+	case 2:
+		return fmt.Sprintf("%s %d %d", def.Name, operands[0], operands[1])
 
 	default:
 		return fmt.Sprintf("ERROR: unhandled operandCount for %s\n", def.Name)
@@ -78,6 +80,7 @@ const (
 	OpGetLocal                    // retrieves value of a local variable
 	OpSetLocal                    // sets value of a local variable
 	OpGetBuiltin                  // get built-in function: len, push...
+	OpClosure                     // tell the vm to wrap the specified "compiled function" int an "closure"
 )
 
 type Definition struct {
@@ -113,6 +116,7 @@ var definitions = map[Opcode]*Definition{
 	OpGetLocal:      {"OpGetLocal", []int{1}}, // up to 256 local variables
 	OpSetLocal:      {"OpSetLocal", []int{1}},
 	OpGetBuiltin:    {"OpGetBuiltin", []int{1}}, // index of built-in, up to 256 built-in functions;
+	OpClosure:       {"OpClosure", []int{2, 1}}, // accepts: 1. `constant index` - specifies where is the constant pool we can find the `compiled function` to be converted into a closure. 2. how many `free variables` sit on the stack and need to be transferred to the about-to-be-created closure.
 }
 
 func Lookup(op byte) (*Definition, error) {
