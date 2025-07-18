@@ -106,7 +106,7 @@ var definitions = map[Opcode]*Definition{
 	OpArray:         {"OpArray", []int{2}},
 	OpHash:          {"OpHash", []int{2}},
 	OpIndex:         {"OpIndex", []int{}},
-	OpCall:          {"OpIndex", []int{}},
+	OpCall:          {"OpIndex", []int{1}}, // accepts number of arguments (up to 256)
 	OpReturnValue:   {"OpReturnValue", []int{}},
 	OpReturn:        {"OpReturn", []int{}},
 	OpGetLocal:      {"OpGetLocal", []int{1}}, // up to 256 local variables

@@ -197,6 +197,8 @@ func (vm *VM) Run() error {
 			}
 
 		case code.OpCall:
+			vm.currentFrame().ip += 1 // skip info about arguments count;
+
 			fn, ok := vm.stack[vm.sp-1].(*object.CompiledFunction)
 			if !ok {
 				return fmt.Errorf("calling non-function")
@@ -204,7 +206,7 @@ func (vm *VM) Run() error {
 
 			frame := NewFrame(fn, vm.sp)
 			vm.pushFrame(frame)
-			vm.sp = frame.basePointer + fn.NumLocals // settings frame starting point while reserving `fn.NumLocals` slots on the stack for local variables. So the stack would be [...(instructions),(basePointer) local variables..., (vm.sp) function instructions,(empty or garbage)...];
+			vm.sp = frame.basePointer + fn.NumLocals // settings frame starting point while reserving `fn.NumLocals` slots on the stack for local variables. So the stack would be [...(instructions),(basePointer) local variables..., (vm.sp) function instructions, function args..., (empty or garbage)...];
 
 		case code.OpReturnValue:
 			returnValue := vm.pop()
