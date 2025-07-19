@@ -53,35 +53,36 @@ func (ins Instructions) fmtInstruction(def *Definition, operands []int) any {
 type Opcode byte
 
 const (
-	OpConstant      Opcode = iota // accepts a constant (e.g. 2)
-	OpAdd                         // a+b
-	OpPop                         //
-	OpSub                         // a-b
-	OpMul                         // a*b
-	OpDiv                         // a/b
-	OpTrue                        //
-	OpFalse                       //
-	OpEqual                       // a==b
-	OpNotEqual                    // a!=b
-	OpGreaterThan                 // a>b
-	OpMinus                       // -a
-	OpBang                        // !true
-	OpJumpNotTruthy               // this instruction will tell the VM to only jump if the value on top of the stack is not 'truthy' (i.e. not `false` nor `null`), accepts offset
-	OpJump                        // accepts offset
-	OpNull                        // 'null'
-	OpGetGlobal                   // retrieves value of a global variable
-	OpSetGlobal                   // sets value of a global variable
-	OpArray                       // accepts size of the array
-	OpHash                        // accept number of keys + number of values
-	OpIndex                       // [1,2][0], {a:b}[a]
-	OpCall                        // calls function myFunc()
-	OpReturnValue                 //
-	OpReturn                      // just return (go back), no value
-	OpGetLocal                    // retrieves value of a local variable
-	OpSetLocal                    // sets value of a local variable
-	OpGetBuiltin                  // get built-in function: len, push...
-	OpClosure                     // tell the vm to wrap the specified "compiled function" int an "closure"
-	OpGetFree                     // get "free variable", accepts index of closure's `Free` field
+	OpConstant       Opcode = iota // accepts a constant (e.g. 2)
+	OpAdd                          // a+b
+	OpPop                          //
+	OpSub                          // a-b
+	OpMul                          // a*b
+	OpDiv                          // a/b
+	OpTrue                         //
+	OpFalse                        //
+	OpEqual                        // a==b
+	OpNotEqual                     // a!=b
+	OpGreaterThan                  // a>b
+	OpMinus                        // -a
+	OpBang                         // !true
+	OpJumpNotTruthy                // this instruction will tell the VM to only jump if the value on top of the stack is not 'truthy' (i.e. not `false` nor `null`), accepts offset
+	OpJump                         // accepts offset
+	OpNull                         // 'null'
+	OpGetGlobal                    // retrieves value of a global variable
+	OpSetGlobal                    // sets value of a global variable
+	OpArray                        // accepts size of the array
+	OpHash                         // accept number of keys + number of values
+	OpIndex                        // [1,2][0], {a:b}[a]
+	OpCall                         // calls function myFunc()
+	OpReturnValue                  //
+	OpReturn                       // just return (go back), no value
+	OpGetLocal                     // retrieves value of a local variable
+	OpSetLocal                     // sets value of a local variable
+	OpGetBuiltin                   // get built-in function: len, push...
+	OpClosure                      // tell the vm to wrap the specified "compiled function" int an "closure"
+	OpGetFree                      // get "free variable", accepts index of closure's `Free` field
+	OpCurrentClosure               //
 )
 
 type Definition struct {
@@ -90,35 +91,36 @@ type Definition struct {
 }
 
 var definitions = map[Opcode]*Definition{
-	OpConstant:      {"OpConstant", []int{2}},
-	OpAdd:           {"OpAdd", []int{}},
-	OpPop:           {"OpPop", []int{}},
-	OpSub:           {"OpSub", []int{}},
-	OpMul:           {"OpMul", []int{}},
-	OpDiv:           {"OpDiv", []int{}},
-	OpTrue:          {"OpTrue", []int{}},
-	OpFalse:         {"OpFalse", []int{}},
-	OpEqual:         {"OpEqual", []int{}},
-	OpNotEqual:      {"OpNotEqual", []int{}},
-	OpGreaterThan:   {"OpGreaterThan", []int{}},
-	OpMinus:         {"OpMinus", []int{}},
-	OpBang:          {"OpBang", []int{}},
-	OpJump:          {"OpJump", []int{2}},
-	OpJumpNotTruthy: {"OpJumpNotTruthy", []int{2}},
-	OpNull:          {"OpNull", []int{}},
-	OpGetGlobal:     {"OpGetGlobal", []int{2}}, // up to 65535 global variables (two bytes of data)
-	OpSetGlobal:     {"OpSetGlobal", []int{2}},
-	OpArray:         {"OpArray", []int{2}},
-	OpHash:          {"OpHash", []int{2}},
-	OpIndex:         {"OpIndex", []int{}},
-	OpCall:          {"OpIndex", []int{1}}, // accepts number of arguments (up to 256)
-	OpReturnValue:   {"OpReturnValue", []int{}},
-	OpReturn:        {"OpReturn", []int{}},
-	OpGetLocal:      {"OpGetLocal", []int{1}}, // up to 256 local variables
-	OpSetLocal:      {"OpSetLocal", []int{1}},
-	OpGetBuiltin:    {"OpGetBuiltin", []int{1}}, // index of built-in, up to 256 built-in functions;
-	OpClosure:       {"OpClosure", []int{2, 1}}, // accepts: 1. `constant index` - specifies where is the constant pool we can find the `compiled function` to be converted into a closure. 2. how many `free variables` sit on the stack and need to be transferred to the about-to-be-created closure.
-	OpGetFree:       {"OpGetFree", []int{1}},
+	OpConstant:       {"OpConstant", []int{2}},
+	OpAdd:            {"OpAdd", []int{}},
+	OpPop:            {"OpPop", []int{}},
+	OpSub:            {"OpSub", []int{}},
+	OpMul:            {"OpMul", []int{}},
+	OpDiv:            {"OpDiv", []int{}},
+	OpTrue:           {"OpTrue", []int{}},
+	OpFalse:          {"OpFalse", []int{}},
+	OpEqual:          {"OpEqual", []int{}},
+	OpNotEqual:       {"OpNotEqual", []int{}},
+	OpGreaterThan:    {"OpGreaterThan", []int{}},
+	OpMinus:          {"OpMinus", []int{}},
+	OpBang:           {"OpBang", []int{}},
+	OpJump:           {"OpJump", []int{2}},
+	OpJumpNotTruthy:  {"OpJumpNotTruthy", []int{2}},
+	OpNull:           {"OpNull", []int{}},
+	OpGetGlobal:      {"OpGetGlobal", []int{2}}, // up to 65535 global variables (two bytes of data)
+	OpSetGlobal:      {"OpSetGlobal", []int{2}},
+	OpArray:          {"OpArray", []int{2}},
+	OpHash:           {"OpHash", []int{2}},
+	OpIndex:          {"OpIndex", []int{}},
+	OpCall:           {"OpIndex", []int{1}}, // accepts number of arguments (up to 256)
+	OpReturnValue:    {"OpReturnValue", []int{}},
+	OpReturn:         {"OpReturn", []int{}},
+	OpGetLocal:       {"OpGetLocal", []int{1}}, // up to 256 local variables
+	OpSetLocal:       {"OpSetLocal", []int{1}},
+	OpGetBuiltin:     {"OpGetBuiltin", []int{1}}, // index of built-in, up to 256 built-in functions;
+	OpClosure:        {"OpClosure", []int{2, 1}}, // accepts: 1. `constant index` - specifies where is the constant pool we can find the `compiled function` to be converted into a closure. 2. how many `free variables` sit on the stack and need to be transferred to the about-to-be-created closure.
+	OpGetFree:        {"OpGetFree", []int{1}},
+	OpCurrentClosure: {"OpCurrentClosure", []int{}},
 }
 
 func Lookup(op byte) (*Definition, error) {
