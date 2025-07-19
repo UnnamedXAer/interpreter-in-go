@@ -81,6 +81,7 @@ const (
 	OpSetLocal                    // sets value of a local variable
 	OpGetBuiltin                  // get built-in function: len, push...
 	OpClosure                     // tell the vm to wrap the specified "compiled function" int an "closure"
+	OpGetFree                     // get "free variable", accepts index of closure's `Free` field
 )
 
 type Definition struct {
@@ -117,6 +118,7 @@ var definitions = map[Opcode]*Definition{
 	OpSetLocal:      {"OpSetLocal", []int{1}},
 	OpGetBuiltin:    {"OpGetBuiltin", []int{1}}, // index of built-in, up to 256 built-in functions;
 	OpClosure:       {"OpClosure", []int{2, 1}}, // accepts: 1. `constant index` - specifies where is the constant pool we can find the `compiled function` to be converted into a closure. 2. how many `free variables` sit on the stack and need to be transferred to the about-to-be-created closure.
+	OpGetFree:       {"OpGetFree", []int{1}},
 }
 
 func Lookup(op byte) (*Definition, error) {
